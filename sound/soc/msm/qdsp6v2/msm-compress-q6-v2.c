@@ -3132,6 +3132,10 @@ static int msm_compr_audio_effects_config_get(struct snd_kcontrol *kcontrol,
 		values[2] = (long)audio_effects->query.size;
 		values[3] = (long)audio_effects->query.offset;
 		values[4] = (long)audio_effects->query.device;
+	done:
+		mutex_unlock(&pdata->lock);
+		return ret;
+
 		if (values[2] > DTS_EAGLE_MAX_PARAM_SIZE_FOR_ALSA) {
 			pr_err("%s: DTS_EAGLE_MODULE parameter's requested size (%li) too large (max size is %i)\n",
 				__func__, values[2],
@@ -3145,9 +3149,7 @@ static int msm_compr_audio_effects_config_get(struct snd_kcontrol *kcontrol,
 		pr_err("%s: Invalid effects config module\n", __func__);
 		return -EINVAL;
 	}
-done:
-	mutex_unlock(&pdata->lock)
-	return ret;
+	return 0;
 }
 
 static int msm_compr_query_audio_effect_put(struct snd_kcontrol *kcontrol,

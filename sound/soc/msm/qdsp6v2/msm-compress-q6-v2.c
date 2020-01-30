@@ -3099,6 +3099,7 @@ static int msm_compr_audio_effects_config_get(struct snd_kcontrol *kcontrol,
 	struct msm_compr_audio_effects *audio_effects = NULL;
 	struct snd_compr_stream *cstream = NULL;
 	struct msm_compr_audio *prtd = NULL;
+	long *values = &(ucontrol->value.integer.value[0]);
 	int ret = 0;
 
 	pr_debug("%s\n", __func__);
@@ -3144,7 +3145,9 @@ static int msm_compr_audio_effects_config_get(struct snd_kcontrol *kcontrol,
 		pr_err("%s: Invalid effects config module\n", __func__);
 		return -EINVAL;
 	}
-	return 0;
+done:
+	mutex_unlock(&pdata->lock)
+	return ret;
 }
 
 static int msm_compr_query_audio_effect_put(struct snd_kcontrol *kcontrol,
